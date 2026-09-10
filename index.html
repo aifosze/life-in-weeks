@@ -13,148 +13,76 @@
     margin: 0;
     padding: 24px 16px 60px;
   }
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  h1 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 4px;
-  }
-  p.subtitle {
-    font-size: 14px;
-    color: #666;
-    margin: 0 0 24px;
-  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+  p.subtitle { font-size: 14px; color: #666; margin: 0 0 24px; }
   .form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-    align-items: flex-end;
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-bottom: 16px; align-items: flex-end;
   }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  label {
-    font-size: 13px;
-    color: #555;
-  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  label { font-size: 13px; color: #555; }
   input {
-    padding: 8px 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    min-width: 160px;
+    padding: 8px 10px; font-size: 14px;
+    border: 1px solid #ccc; border-radius: 6px; min-width: 160px;
   }
   button {
-    padding: 9px 18px;
-    font-size: 14px;
-    font-weight: 500;
-    background: #1a1a1a;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    padding: 9px 18px; font-size: 14px; font-weight: 500;
+    background: #1a1a1a; color: #fff; border: none;
+    border-radius: 6px; cursor: pointer;
   }
   button:hover { background: #333; }
-  #error {
-    color: #c0392b;
-    font-size: 13px;
-    display: none;
-    margin: 0 0 12px;
+  #error { color: #c0392b; font-size: 13px; display: none; margin: 0 0 12px; }
+  .summary { display: none; gap: 12px; margin-bottom: 20px; }
+  .summary-card { flex: 1; background: #f5f5f5; border-radius: 8px; padding: 12px 16px; }
+  .summary-card .label { font-size: 12px; color: #666; margin-bottom: 4px; }
+  .summary-card .value { font-size: 22px; font-weight: 600; }
+  .legend {
+    display: flex; gap: 16px; align-items: center;
+    font-size: 12px; color: #555; margin-bottom: 16px;
   }
-  .summary {
-    display: none;
-    gap: 12px;
-    margin-bottom: 20px;
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  .chart-outer { display: flex; }
+  .years-axis-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #999;
+    padding-right: 6px;
+    flex-shrink: 0;
+    text-align: center;
   }
-  .summary-card {
-    flex: 1;
-    background: #f5f5f5;
-    border-radius: 8px;
-    padding: 12px 16px;
-  }
-  .summary-card .label {
-    font-size: 12px;
-    color: #666;
+  .chart-inner { flex: 1; min-width: 0; }
+  .weeks-axis-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #999;
     margin-bottom: 4px;
   }
-  .summary-card .value {
-    font-size: 22px;
-    font-weight: 600;
-  }
-  .legend {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 12px;
-  }
-  .legend span {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .swatch {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    display: inline-block;
-  }
-  .chart-wrap {
-    overflow-x: auto;
-    padding-bottom: 12px;
-  }
-  .chart-inner {
-    display: flex;
-  }
+  .chart-body { display: flex; }
   .year-labels {
-    display: flex;
-    flex-direction: column;
-    padding-top: 14px;
-    margin-right: 6px;
-    flex-shrink: 0;
+    display: flex; flex-direction: column;
+    margin-right: 6px; flex-shrink: 0;
   }
   .year-label, .year-spacer {
-    height: 8px;
-    font-size: 9px;
-    color: #999;
-    line-height: 8px;
-    text-align: right;
-    padding-right: 4px;
-    white-space: nowrap;
+    font-size: 9px; color: #999; text-align: right;
+    padding-right: 4px; white-space: nowrap;
   }
+  .grid-col { flex: 1; min-width: 0; }
   .week-labels {
-    display: flex;
-    font-size: 9px;
-    color: #999;
-    margin-bottom: 2px;
+    display: flex; font-size: 9px; color: #999; margin-bottom: 3px;
   }
-  .week-label {
-    flex-shrink: 0;
+  .week-label { text-align: left; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
   }
-  .row {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 2px;
-  }
-  .box {
-    width: 6px;
-    height: 6px;
-    border-radius: 1px;
-    flex-shrink: 0;
-  }
-  footer {
-    text-align: center;
-    font-size: 12px;
-    color: #aaa;
-    margin-top: 32px;
-  }
+  .box { aspect-ratio: 1; border-radius: 1px; }
+
+  footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 32px; }
 </style>
 </head>
 <body>
@@ -191,12 +119,16 @@
     </div>
   </div>
 
-  <div class="chart-wrap">
+  <div class="chart-outer">
+    <div class="years-axis-label">YEARS</div>
     <div class="chart-inner">
-      <div class="year-labels" id="yearLabels"></div>
-      <div>
-        <div class="week-labels" id="weekLabels"></div>
-        <div id="grid"></div>
+      <div class="weeks-axis-label">WEEKS</div>
+      <div class="chart-body">
+        <div class="year-labels" id="yearLabels"></div>
+        <div class="grid-col">
+          <div class="week-labels" id="weekLabels"></div>
+          <div class="cal-grid" id="grid"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -205,15 +137,15 @@
 </div>
 
 <script>
-const BOX = 6;
-const GAP = 2;
-
 const btn = document.getElementById('submitBtn');
 const errEl = document.getElementById('error');
 const gridEl = document.getElementById('grid');
 const yearLabelsEl = document.getElementById('yearLabels');
 const weekLabelsEl = document.getElementById('weekLabels');
 const summaryEl = document.getElementById('summary');
+
+const BLOCK_GAP = '3px';
+const CELL_GAP = '1px';
 
 function showError(msg) {
   errEl.textContent = msg;
@@ -261,28 +193,25 @@ function render() {
     document.getElementById('weeksLeft').textContent = (totalWeeks - weeksPassed).toLocaleString('id-ID');
   }
 
-  for (let w = 1; w <= 52; w += 4) {
+  const weekMarks = [1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52];
+  weekMarks.forEach((wm, i) => {
     const lbl = document.createElement('div');
     lbl.className = 'week-label';
-    lbl.style.width = (BOX + GAP) * 4 + 'px';
-    lbl.textContent = w;
+    const widthWeeks = i === 0 ? wm : wm - weekMarks[i - 1];
+    lbl.style.width = (widthWeeks / 52 * 100) + '%';
+    lbl.textContent = wm;
     weekLabelsEl.appendChild(lbl);
-  }
+  });
+
+  gridEl.style.rowGap = CELL_GAP;
+  gridEl.style.columnGap = CELL_GAP;
 
   for (let y = 0; y < expectancy; y++) {
-    if (y % 5 === 0) {
-      const yl = document.createElement('div');
-      yl.className = 'year-label';
-      yl.textContent = y;
-      yearLabelsEl.appendChild(yl);
-    } else {
-      const spacer = document.createElement('div');
-      spacer.className = 'year-spacer';
-      yearLabelsEl.appendChild(spacer);
-    }
-
-    const row = document.createElement('div');
-    row.className = 'row';
+    const showLabel = (y === 0 || y === 1 || y % 5 === 0);
+    const yl = document.createElement('div');
+    yl.className = showLabel ? 'year-label' : 'year-spacer';
+    if (showLabel) yl.textContent = y;
+    yearLabelsEl.appendChild(yl);
 
     for (let w = 0; w < 52; w++) {
       const idx = y * 52 + w;
@@ -293,13 +222,39 @@ function render() {
       } else {
         box.style.background = '#639922';
       }
-      row.appendChild(box);
+      if ((w + 1) % 4 === 0 && w !== 51) {
+        box.style.marginRight = BLOCK_GAP;
+      }
+      gridEl.appendChild(box);
     }
-    gridEl.appendChild(row);
   }
+
+  requestAnimationFrame(() => {
+    const boxes = gridEl.querySelectorAll('.box');
+    const rowHeight = boxes.length ? boxes[0].getBoundingClientRect().height : 0;
+    const labels = yearLabelsEl.querySelectorAll('.year-label, .year-spacer');
+    labels.forEach((lbl, y) => {
+      let extra = 0;
+      if ((y + 1) % 5 === 0 && y !== expectancy - 1) extra = 3;
+      lbl.style.height = (rowHeight + 1) + 'px';
+      lbl.style.lineHeight = (rowHeight + 1) + 'px';
+      lbl.style.marginBottom = extra + 'px';
+    });
+    for (let y = 0; y < expectancy; y++) {
+      if ((y + 1) % 5 === 0 && y !== expectancy - 1) {
+        for (let w = 0; w < 52; w++) {
+          const idx = y * 52 + w;
+          if (boxes[idx]) boxes[idx].style.marginBottom = '3px';
+        }
+      }
+    }
+  });
 }
 
 btn.addEventListener('click', render);
+window.addEventListener('resize', () => {
+  if (gridEl.children.length) render();
+});
 render();
 </script>
 </body>
