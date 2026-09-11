@@ -18,6 +18,8 @@
     --future-soft: #4d7a52;
     --today: #e0a458;
     --line: #26332f;
+    --cell: 9px;
+    --gap: 2px;
   }
 
   *{ box-sizing:border-box; }
@@ -153,33 +155,45 @@
 
   .grid-scroll{
     overflow-x:auto;
-    padding-bottom:6px;
+    overflow-y:hidden;
+    padding-bottom:10px;
   }
 
-  .year-row{
+  .calendar{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    width:max-content;
+  }
+
+  .age-labels{
     display:grid;
-    grid-template-columns:44px 1fr;
-    align-items:center;
-    gap:10px;
-    margin-bottom:3px;
+    grid-auto-flow:column;
+    grid-auto-columns:var(--cell);
+    gap:var(--gap);
+    height:14px;
+    overflow:visible;
   }
 
-  .age{
-    font-size:0.68rem;
+  .age-labels span{
+    font-size:0.62rem;
     color:var(--muted);
-    text-align:right;
+    text-align:left;
+    white-space:nowrap;
     font-variant-numeric:tabular-nums;
   }
 
-  .weeks{
+  .weeks-grid{
     display:grid;
-    grid-template-columns:repeat(52, minmax(6px, 1fr));
-    gap:2.5px;
-    min-width:420px;
+    grid-template-rows:repeat(52, var(--cell));
+    grid-auto-flow:column;
+    grid-auto-columns:var(--cell);
+    gap:var(--gap);
   }
 
   .cell{
-    aspect-ratio:1/1;
+    width:var(--cell);
+    height:var(--cell);
     border-radius:1.5px;
     background:var(--past);
   }
@@ -196,7 +210,7 @@
   }
 
   @media (max-width:600px){
-    .weeks{ min-width:340px; }
+    :root{ --cell: 7px; }
     .field, .field input{ width:100%; }
   }
 </style>
@@ -244,14 +258,20 @@
     <span><i class="swatch" style="background:var(--today)"></i> Minggu ini</span>
   </div>
 
-  <div class="grid-scroll" id="gridContainer"></div>
+  <div class="grid-scroll">
+    <div class="calendar">
+      <div class="age-labels" id="ageLabels"></div>
+      <div class="weeks-grid" id="weeksGrid"></div>
+    </div>
+  </div>
 
   <footer>Perhitungan bersifat perkiraan (52 minggu / tahun) dan hanya untuk refleksi pribadi.</footer>
 </div>
 
 <script>
   const form = document.getElementById('form');
-  const gridContainer = document.getElementById('gridContainer');
+  const ageLabels = document.getElementById('ageLabels');
+  const weeksGrid = document.getElementById('weeksGrid');
   const statsEl = document.getElementById('stats');
   const statLived = document.getElementById('statLived');
   const statLeft = document.getElementById('statLeft');
@@ -265,22 +285,21 @@
     const elapsedMs = today - birthDate;
     const elapsedWeeks = Math.max(0, Math.floor(elapsedMs / MS_PER_WEEK));
     const totalWeeks = Math.max(1, Math.round(expectancyYears * WEEKS_PER_YEAR));
+    const years = Math.ceil(totalWeeks / WEEKS_PER_YEAR);
 
-    gridContainer.innerHTML = '';
-    const rows = Math.ceil(totalWeeks / WEEKS_PER_YEAR);
+    ageLabels.innerHTML = '';
+    weeksGrid.innerHTML = '';
 
-    for(let year = 0; year < rows; year++){
-      const rowEl = document.createElement('div');
-      rowEl.className = 'year-row';
+    // Age labels run left to right, one per year column, shown every 5 years to stay legible.
+    for(let year = 0; year < years; year++){
+      const label = document.createElement('span');
+      label.textContent = (year % 5 === 0) ? year : '';
+      ageLabels.appendChild(label);
+    }
 
-      const ageEl = document.createElement('div');
-      ageEl.className = 'age';
-      ageEl.textContent = year;
-      rowEl.appendChild(ageEl);
-
-      const weeksEl = document.createElement('div');
-      weeksEl.className = 'weeks';
-
+    // Weeks grid: 52 rows fixed, one column per year. Appending in
+    // year-major order fills each column top-to-bottom before moving right.
+    for(let year = 0; year < years; year++){
       for(let w = 0; w < WEEKS_PER_YEAR; w++){
         const index = year * WEEKS_PER_YEAR + w;
         if(index >= totalWeeks) break;
@@ -295,11 +314,8 @@
         } else {
           cell.classList.add('future');
         }
-        weeksEl.appendChild(cell);
+        weeksGrid.appendChild(cell);
       }
-
-      rowEl.appendChild(weeksEl);
-      gridContainer.appendChild(rowEl);
     }
 
     const weeksLeft = Math.max(0, totalWeeks - elapsedWeeks);
