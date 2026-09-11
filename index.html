@@ -173,9 +173,6 @@
     grid-column:2;
     grid-row:1;
     display:grid;
-    grid-auto-flow:column;
-    grid-auto-columns:var(--cell);
-    gap:var(--gap);
     overflow:visible;
   }
 
@@ -191,8 +188,6 @@
     grid-column:1;
     grid-row:2;
     display:grid;
-    grid-template-rows:repeat(52, var(--cell));
-    gap:var(--gap);
     overflow:visible;
   }
 
@@ -201,7 +196,6 @@
     color:var(--muted);
     text-align:right;
     line-height:1;
-    align-self:center;
     font-variant-numeric:tabular-nums;
   }
 
@@ -209,10 +203,6 @@
     grid-column:2;
     grid-row:2;
     display:grid;
-    grid-template-rows:repeat(52, var(--cell));
-    grid-auto-flow:column;
-    grid-auto-columns:var(--cell);
-    gap:var(--gap);
   }
 
   .cell{
@@ -307,12 +297,38 @@
   const WEEKS_PER_YEAR = 52;
   const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
-  // Build the week-number labels down the left side once; they don't
-  // depend on the form inputs.
+  const CELL = 9;             // px, one week/year square
+  const GAP = 2;               // px, gap between ordinary neighbours
+  const WEEK_GROUP = 4;        // insert a bigger gap every 4 weeks
+  const WEEK_GROUP_GAP = 6;    // px
+  const YEAR_GROUP = 10;       // insert a bigger gap every 10 years
+  const YEAR_GROUP_GAP = 9;    // px
+
+  // Builds a CSS grid-template track string for `count` items, where every
+  // `groupSize`-th item is followed by a wider gap track instead of the
+  // ordinary one. Returns the template string plus each item's 1-based
+  // track/line position, so cells can be placed with grid-row/column-start.
+  function buildAxis(count, groupSize, groupGapPx){
+    const tracks = [];
+    const positions = [];
+    for(let i = 0; i < count; i++){
+      tracks.push(CELL + 'px');
+      positions.push(tracks.length);
+      const isLast = i === count - 1;
+      const endsGroup = (i + 1) % groupSize === 0;
+      if(!isLast) tracks.push((endsGroup ? groupGapPx : GAP) + 'px');
+    }
+    return { template: tracks.join(' '), positions };
+  }
+
+  // Week-number labels down the left side never change, so build them once.
+  const weekAxis = buildAxis(WEEKS_PER_YEAR, WEEK_GROUP, WEEK_GROUP_GAP);
+  weekLabels.style.gridTemplateRows = weekAxis.template;
   for(let w = 0; w < WEEKS_PER_YEAR; w++){
     const label = document.createElement('span');
     const weekNumber = w + 1;
     label.textContent = (weekNumber === 1 || weekNumber % 4 === 0) ? weekNumber : '';
+    label.style.gridRowStart = weekAxis.positions[w];
     weekLabels.appendChild(label);
   }
 
@@ -323,18 +339,21 @@
     const totalWeeks = Math.max(1, Math.round(expectancyYears * WEEKS_PER_YEAR));
     const years = Math.ceil(totalWeeks / WEEKS_PER_YEAR);
 
-    ageLabels.innerHTML = '';
-    weeksGrid.innerHTML = '';
+    const yearAxis = buildAxis(years, YEAR_GROUP, YEAR_GROUP_GAP);
 
-    // Age labels run left to right, one per year column, shown every 5 years to stay legible.
+    ageLabels.innerHTML = '';
+    ageLabels.style.gridTemplateColumns = yearAxis.template;
     for(let year = 0; year < years; year++){
       const label = document.createElement('span');
       label.textContent = (year % 5 === 0) ? year : '';
+      label.style.gridColumnStart = yearAxis.positions[year];
       ageLabels.appendChild(label);
     }
 
-    // Weeks grid: 52 rows fixed, one column per year. Appending in
-    // year-major order fills each column top-to-bottom before moving right.
+    weeksGrid.innerHTML = '';
+    weeksGrid.style.gridTemplateRows = weekAxis.template;
+    weeksGrid.style.gridTemplateColumns = yearAxis.template;
+
     for(let year = 0; year < years; year++){
       for(let w = 0; w < WEEKS_PER_YEAR; w++){
         const index = year * WEEKS_PER_YEAR + w;
@@ -342,6 +361,8 @@
 
         const cell = document.createElement('div');
         cell.className = 'cell';
+        cell.style.gridRowStart = weekAxis.positions[w];
+        cell.style.gridColumnStart = yearAxis.positions[year];
 
         if(index === elapsedWeeks){
           cell.classList.add('today');
