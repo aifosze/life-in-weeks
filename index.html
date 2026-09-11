@@ -3,259 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kalender Umur dalam Minggu</title>
+<title>Kalender Hidup — Minggu demi Minggu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: #ffffff;
-    color: #1a1a1a;
-    margin: 0;
-    padding: 24px 16px 60px;
+  :root{
+    --bg: #10181a;
+    --panel: #16221f;
+    --ink: #eef2ee;
+    --muted: #9fb0aa;
+    --past: #3c4a46;
+    --future: #6fae72;
+    --future-soft: #4d7a52;
+    --today: #e0a458;
+    --line: #26332f;
   }
-  .container { max-width: 900px; margin: 0 auto; }
-  h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
-  p.subtitle { font-size: 14px; color: #666; margin: 0 0 24px; }
-  .form-row {
-    display: flex; flex-wrap: wrap; gap: 12px;
-    margin-bottom: 16px; align-items: flex-end;
-  }
-  .field { display: flex; flex-direction: column; gap: 4px; }
-  label { font-size: 13px; color: #555; }
-  input {
-    padding: 8px 10px; font-size: 14px;
-    border: 1px solid #ccc; border-radius: 6px; min-width: 160px;
-  }
-  button {
-    padding: 9px 18px; font-size: 14px; font-weight: 500;
-    background: #1a1a1a; color: #fff; border: none;
-    border-radius: 6px; cursor: pointer;
-  }
-  button:hover { background: #333; }
-  #error { color: #c0392b; font-size: 13px; display: none; margin: 0 0 12px; }
-  .summary { display: none; gap: 12px; margin-bottom: 20px; }
-  .summary-card { flex: 1; background: #f5f5f5; border-radius: 8px; padding: 12px 16px; }
-  .summary-card .label { font-size: 12px; color: #666; margin-bottom: 4px; }
-  .summary-card .value { font-size: 22px; font-weight: 600; }
-  .legend {
-    display: flex; gap: 16px; align-items: center;
-    font-size: 12px; color: #555; margin-bottom: 16px;
-  }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
 
-  .chart-outer { display: flex; }
-  .years-axis-label {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: #999;
-    padding-right: 6px;
-    flex-shrink: 0;
-    text-align: center;
-  }
-  .chart-inner { flex: 1; min-width: 0; }
-  .weeks-axis-label {
-    font-size: 10px;
-    letter-spacing: 1px;
-    color: #999;
-    margin-bottom: 4px;
-  }
-  .chart-body { display: flex; }
-  .year-labels {
-    display: flex; flex-direction: column;
-    margin-right: 6px; flex-shrink: 0;
-  }
-  .year-label, .year-spacer {
-    font-size: 9px; color: #999; text-align: right;
-    padding-right: 4px; white-space: nowrap;
-  }
-  .grid-col { flex: 1; min-width: 0; }
-  .week-labels {
-    display: flex; font-size: 9px; color: #999; margin-bottom: 3px;
-  }
-  .week-label { text-align: left; }
-  .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(52, 1fr);
-  }
-  .box { aspect-ratio: 1; border-radius: 1px; }
+  *{ box-sizing:border-box; }
 
-  footer { text-align: center; font-size: 12px; color: #aaa; margin-top: 32px; }
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1040px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+
+  header{
+    margin-bottom:36px;
+  }
+
+  h1{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+
+  header p{
+    margin:0;
+    max-width:52ch;
+    color:var(--muted);
+    line-height:1.55;
+    font-size:0.98rem;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+    margin-bottom:28px;
+  }
+
+  form{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px 28px;
+    align-items:flex-end;
+  }
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:160px;
+  }
+
+  .field label{
+    font-size:0.78rem;
+    color:var(--muted);
+  }
+
+  .field input{
+    background:#0d1614;
+    border:1px solid var(--line);
+    border-radius:8px;
+    color:var(--ink);
+    padding:10px 12px;
+    font-size:0.95rem;
+    font-family:inherit;
+    width:180px;
+  }
+
+  .field input:focus{
+    outline:2px solid var(--future);
+    outline-offset:1px;
+  }
+
+  button{
+    background:var(--future);
+    color:#0d1614;
+    border:none;
+    border-radius:8px;
+    padding:11px 20px;
+    font-size:0.92rem;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+
+  button:hover{ background:var(--future-soft); color:var(--ink); }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px,1fr));
+    gap:16px;
+    margin-top:22px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+  }
+
+  .stat .num{
+    font-family:'Fraunces', serif;
+    font-size:1.7rem;
+    font-weight:600;
+  }
+  .stat .label{
+    font-size:0.78rem;
+    color:var(--muted);
+    margin-top:2px;
+  }
+
+  .legend{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+    font-size:0.82rem;
+    color:var(--muted);
+  }
+  .legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .swatch{
+    width:11px;height:11px;border-radius:2px;display:inline-block;
+  }
+
+  .grid-scroll{
+    overflow-x:auto;
+    padding-bottom:6px;
+  }
+
+  .year-row{
+    display:grid;
+    grid-template-columns:44px 1fr;
+    align-items:center;
+    gap:10px;
+    margin-bottom:3px;
+  }
+
+  .age{
+    font-size:0.68rem;
+    color:var(--muted);
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .weeks{
+    display:grid;
+    grid-template-columns:repeat(52, minmax(6px, 1fr));
+    gap:2.5px;
+    min-width:420px;
+  }
+
+  .cell{
+    aspect-ratio:1/1;
+    border-radius:1.5px;
+    background:var(--past);
+  }
+  .cell.future{ background:var(--future); }
+  .cell.today{
+    background:var(--today);
+    box-shadow:0 0 0 1px var(--today);
+  }
+
+  footer{
+    margin-top:36px;
+    color:var(--muted);
+    font-size:0.78rem;
+  }
+
+  @media (max-width:600px){
+    .weeks{ min-width:340px; }
+    .field, .field input{ width:100%; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Kalender umur dalam minggu</h1>
-  <p class="subtitle">1 kotak = 1 minggu. Masukkan data di bawah untuk melihat gambaran umurmu.</p>
+<div class="wrap">
 
-  <div class="form-row">
-    <div class="field">
-      <label for="expectancy">Usia harapan hidup (tahun)</label>
-      <input type="number" id="expectancy" value="75" min="1" max="100">
-    </div>
-    <div class="field">
-      <label for="birthdate">Tanggal lahir</label>
-      <input type="date" id="birthdate">
-    </div>
-    <button id="submitBtn">Tampilkan</button>
-  </div>
-  <p id="error"></p>
+  <header>
+    <h1>Kalender Hidup</h1>
+    <p>Satu kotak mewakili satu minggu. Abu-abu adalah minggu yang sudah kamu jalani, hijau adalah minggu yang masih menunggu di depan.</p>
+  </header>
 
-  <div class="legend">
-    <span><span class="swatch" style="background:#b3b3ac;"></span>Sudah dilewati</span>
-    <span><span class="swatch" style="background:#639922;"></span>Tersisa</span>
-  </div>
+  <div class="panel">
+    <form id="form">
+      <div class="field">
+        <label for="birthdate">Tanggal lahir</label>
+        <input type="date" id="birthdate" required>
+      </div>
+      <div class="field">
+        <label for="expectancy">Harapan hidup (tahun)</label>
+        <input type="number" id="expectancy" min="1" max="120" value="80" required>
+      </div>
+      <button type="submit">Gambar kalender</button>
+    </form>
 
-  <div class="summary" id="summary">
-    <div class="summary-card">
-      <div class="label">Minggu terlewati</div>
-      <div class="value" id="weeksPassed">0</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">Minggu tersisa</div>
-      <div class="value" id="weeksLeft">0</div>
-    </div>
-  </div>
-
-  <div class="chart-outer">
-    <div class="years-axis-label">YEARS</div>
-    <div class="chart-inner">
-      <div class="weeks-axis-label">WEEKS</div>
-      <div class="chart-body">
-        <div class="year-labels" id="yearLabels"></div>
-        <div class="grid-col">
-          <div class="week-labels" id="weekLabels"></div>
-          <div class="cal-grid" id="grid"></div>
-        </div>
+    <div class="stats" id="stats" hidden>
+      <div class="stat">
+        <div class="num" id="statLived">–</div>
+        <div class="label">minggu telah dijalani</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statLeft">–</div>
+        <div class="label">minggu tersisa (perkiraan)</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statPercent">–</div>
+        <div class="label">persen perjalanan</div>
       </div>
     </div>
   </div>
 
-  <footer>Life in weeks</footer>
+  <div class="legend">
+    <span><i class="swatch" style="background:var(--past)"></i> Sudah dilewati</span>
+    <span><i class="swatch" style="background:var(--future)"></i> Belum dilewati</span>
+    <span><i class="swatch" style="background:var(--today)"></i> Minggu ini</span>
+  </div>
+
+  <div class="grid-scroll" id="gridContainer"></div>
+
+  <footer>Perhitungan bersifat perkiraan (52 minggu / tahun) dan hanya untuk refleksi pribadi.</footer>
 </div>
 
 <script>
-const btn = document.getElementById('submitBtn');
-const errEl = document.getElementById('error');
-const gridEl = document.getElementById('grid');
-const yearLabelsEl = document.getElementById('yearLabels');
-const weekLabelsEl = document.getElementById('weekLabels');
-const summaryEl = document.getElementById('summary');
+  const form = document.getElementById('form');
+  const gridContainer = document.getElementById('gridContainer');
+  const statsEl = document.getElementById('stats');
+  const statLived = document.getElementById('statLived');
+  const statLeft = document.getElementById('statLeft');
+  const statPercent = document.getElementById('statPercent');
 
-const BLOCK_GAP = '3px';
-const CELL_GAP = '1px';
+  const WEEKS_PER_YEAR = 52;
+  const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
-function showError(msg) {
-  errEl.textContent = msg;
-  errEl.style.display = 'block';
-}
-function clearError() {
-  errEl.style.display = 'none';
-}
-
-function render() {
-  clearError();
-  const expectancy = parseInt(document.getElementById('expectancy').value, 10);
-  const birthVal = document.getElementById('birthdate').value;
-
-  if (!expectancy || expectancy <= 0) {
-    showError('Masukkan usia harapan hidup yang valid.');
-    return;
-  }
-
-  gridEl.innerHTML = '';
-  yearLabelsEl.innerHTML = '';
-  weekLabelsEl.innerHTML = '';
-  summaryEl.style.display = 'none';
-
-  const totalWeeks = Math.round(expectancy * 52);
-  let weeksPassed = 0;
-  let hasBirth = false;
-
-  if (birthVal) {
-    const birth = new Date(birthVal + 'T00:00:00');
-    if (isNaN(birth.getTime())) {
-      showError('Format tanggal lahir tidak valid.');
-      return;
-    }
+  function render(birthDate, expectancyYears){
     const today = new Date();
-    const diffMs = today - birth;
-    if (diffMs < 0) {
-      showError('Tanggal lahir tidak boleh di masa depan.');
-      return;
-    }
-    hasBirth = true;
-    weeksPassed = Math.min(totalWeeks, Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7)));
-    summaryEl.style.display = 'flex';
-    document.getElementById('weeksPassed').textContent = weeksPassed.toLocaleString('id-ID');
-    document.getElementById('weeksLeft').textContent = (totalWeeks - weeksPassed).toLocaleString('id-ID');
-  }
+    const elapsedMs = today - birthDate;
+    const elapsedWeeks = Math.max(0, Math.floor(elapsedMs / MS_PER_WEEK));
+    const totalWeeks = Math.max(1, Math.round(expectancyYears * WEEKS_PER_YEAR));
 
-  const weekMarks = [1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52];
-  weekMarks.forEach((wm, i) => {
-    const lbl = document.createElement('div');
-    lbl.className = 'week-label';
-    const widthWeeks = i === 0 ? wm : wm - weekMarks[i - 1];
-    lbl.style.width = (widthWeeks / 52 * 100) + '%';
-    lbl.textContent = wm;
-    weekLabelsEl.appendChild(lbl);
-  });
+    gridContainer.innerHTML = '';
+    const rows = Math.ceil(totalWeeks / WEEKS_PER_YEAR);
 
-  gridEl.style.rowGap = CELL_GAP;
-  gridEl.style.columnGap = CELL_GAP;
+    for(let year = 0; year < rows; year++){
+      const rowEl = document.createElement('div');
+      rowEl.className = 'year-row';
 
-  for (let y = 0; y < expectancy; y++) {
-    const showLabel = (y === 0 || y === 1 || y % 5 === 0);
-    const yl = document.createElement('div');
-    yl.className = showLabel ? 'year-label' : 'year-spacer';
-    if (showLabel) yl.textContent = y;
-    yearLabelsEl.appendChild(yl);
+      const ageEl = document.createElement('div');
+      ageEl.className = 'age';
+      ageEl.textContent = year;
+      rowEl.appendChild(ageEl);
 
-    for (let w = 0; w < 52; w++) {
-      const idx = y * 52 + w;
-      const box = document.createElement('div');
-      box.className = 'box';
-      if (hasBirth) {
-        box.style.background = idx < weeksPassed ? '#b3b3ac' : '#639922';
-      } else {
-        box.style.background = '#639922';
-      }
-      if ((w + 1) % 4 === 0 && w !== 51) {
-        box.style.marginRight = BLOCK_GAP;
-      }
-      gridEl.appendChild(box);
-    }
-  }
+      const weeksEl = document.createElement('div');
+      weeksEl.className = 'weeks';
 
-  requestAnimationFrame(() => {
-    const boxes = gridEl.querySelectorAll('.box');
-    const rowHeight = boxes.length ? boxes[0].getBoundingClientRect().height : 0;
-    const labels = yearLabelsEl.querySelectorAll('.year-label, .year-spacer');
-    labels.forEach((lbl, y) => {
-      let extra = 0;
-      if ((y + 1) % 5 === 0 && y !== expectancy - 1) extra = 3;
-      lbl.style.height = (rowHeight + 1) + 'px';
-      lbl.style.lineHeight = (rowHeight + 1) + 'px';
-      lbl.style.marginBottom = extra + 'px';
-    });
-    for (let y = 0; y < expectancy; y++) {
-      if ((y + 1) % 5 === 0 && y !== expectancy - 1) {
-        for (let w = 0; w < 52; w++) {
-          const idx = y * 52 + w;
-          if (boxes[idx]) boxes[idx].style.marginBottom = '3px';
+      for(let w = 0; w < WEEKS_PER_YEAR; w++){
+        const index = year * WEEKS_PER_YEAR + w;
+        if(index >= totalWeeks) break;
+
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+
+        if(index === elapsedWeeks){
+          cell.classList.add('today');
+        } else if(index < elapsedWeeks){
+          // past week stays default gray
+        } else {
+          cell.classList.add('future');
         }
+        weeksEl.appendChild(cell);
       }
-    }
-  });
-}
 
-btn.addEventListener('click', render);
-window.addEventListener('resize', () => {
-  if (gridEl.children.length) render();
-});
-render();
+      rowEl.appendChild(weeksEl);
+      gridContainer.appendChild(rowEl);
+    }
+
+    const weeksLeft = Math.max(0, totalWeeks - elapsedWeeks);
+    const percent = Math.min(100, (elapsedWeeks / totalWeeks) * 100);
+
+    statLived.textContent = elapsedWeeks.toLocaleString('id-ID');
+    statLeft.textContent = weeksLeft.toLocaleString('id-ID');
+    statPercent.textContent = percent.toFixed(1) + '%';
+    statsEl.hidden = false;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const birthValue = document.getElementById('birthdate').value;
+    const expectancy = parseFloat(document.getElementById('expectancy').value);
+    if(!birthValue || !expectancy) return;
+    const birthDate = new Date(birthValue + 'T00:00:00');
+    render(birthDate, expectancy);
+  });
+
+  // Optional: auto-render with a sample default so the page isn't empty on load
+  const defaultBirth = new Date();
+  defaultBirth.setFullYear(defaultBirth.getFullYear() - 25);
+  document.getElementById('birthdate').value = defaultBirth.toISOString().slice(0,10);
+  render(defaultBirth, 80);
 </script>
 </body>
 </html>
